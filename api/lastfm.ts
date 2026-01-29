@@ -72,13 +72,15 @@ export default async function handler(
 	const artist = track.artist["#text"]
 	const playing = track["@attr"]?.nowplaying === "true"
 
-	const imageUrl =
+	let image = PLACEHOLDER
+
+	const artUrl =
 	track.image?.find((i: any) => i.size === "extralarge")?.["#text"] ||
 	track.image?.find((i: any) => i.size === "large")?.["#text"]
 
-	const image = imageUrl
-	? `/api/proxy?url=${encodeURIComponent(imageUrl)}`: PLACEHOLDER
-
+	if (artUrl) {
+		image = await fetchAsDataURL(artUrl)
+	}
 	const subtitle = playing
 	? "currently listening to": `last played ${timeAgo(track.date.uts)} ago`
 
@@ -152,4 +154,11 @@ export default async function handler(
 				"&": "&amp;", "<": "&lt;", ">": "&gt;"
 			}[c]!)
 		)
+	}
+
+	async function fetchAsDataURL(url: string) {
+		const r = await fetch(url)
+		const buf = Buffer.from(await r.arrayBuffer())
+		const mime = r.headers.get("content-type") || "image/jpeg"
+		return `data:${mime};base64,${buf.toString("base64")}`
 	}
