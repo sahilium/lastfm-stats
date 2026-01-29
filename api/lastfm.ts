@@ -72,10 +72,12 @@ export default async function handler(
 	const artist = track.artist["#text"]
 	const playing = track["@attr"]?.nowplaying === "true"
 
-	const image =
+	const imageUrl =
 	track.image?.find((i: any) => i.size === "extralarge")?.["#text"] ||
-	track.image?.find((i: any) => i.size === "large")?.["#text"] ||
-	PLACEHOLDER
+	track.image?.find((i: any) => i.size === "large")?.["#text"]
+
+	const image = imageUrl
+	? `/api/proxy?url=${encodeURIComponent(imageUrl)}`: PLACEHOLDER
 
 	const subtitle = playing
 	? "currently listening to": `last played ${timeAgo(track.date.uts)} ago`
