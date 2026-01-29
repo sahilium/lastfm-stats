@@ -127,7 +127,7 @@ export default async function handler(
 		${playing ? `
 		<!-- pulse behind album art -->
 		<circle
-		cx="35" cy="35" r="26"
+		cx="64" cy="64" r="26"
 		fill="#008080"
 		opacity="0.25"
 		clip-path="url(#cover)">
