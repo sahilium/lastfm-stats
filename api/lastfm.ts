@@ -119,19 +119,40 @@ export default async function handler(
 		</style>
 
 		<defs>
-		<clipPath id="c">
-		<rect x="8" y="8" width="54" height="54" rx="6"/>
+		<clipPath id="cover">
+		<rect x="8" y="8" width="54" height="54" rx="6" ry="6"/>
 		</clipPath>
 		</defs>
 
-		<image href="${image}"
+		${playing ? `
+		<!-- pulse behind album art -->
+		<circle
+		cx="35" cy="35" r="26"
+		fill="#008080"
+		opacity="0.25"
+		clip-path="url(#cover)">
+		<animate attributeName="r"
+		values="22;30;22"
+		dur="1.6s"
+		repeatCount="indefinite"/>
+		<animate attributeName="opacity"
+		values="0.15;0.35;0.15"
+		dur="1.6s"
+		repeatCount="indefinite"/>
+		</circle>
+		`: ""}
+
+		<!-- album / placeholder -->
+		<image
+		href="${image}"
 		x="8" y="8"
 		width="54" height="54"
-		clip-path="url(#c)"
-		preserveAspectRatio="xMidYMid slice"/>
+		clip-path="url(#cover)"
+		preserveAspectRatio="xMidYMid slice"
+		/>
 
 		<text x="72" y="18" class="meta">${escape(subtitle)}</text>
-		<text x="72" y="38">🎧 ${escape(title)}</text>
+		<text x="72" y="38">🎵 ${escape(title)}</text>
 		<text x="72" y="56" class="sub">${escape(artist)}</text>
 
 		${playing ? pulse(): ""}
